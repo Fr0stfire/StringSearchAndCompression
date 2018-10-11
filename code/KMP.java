@@ -12,7 +12,7 @@ import java.util.List;
 public class KMP {
 
 	public KMP(String pattern, String text) {
-		// TODO maybe fill this in.
+
 	}
 
 	/**
@@ -22,41 +22,34 @@ public class KMP {
 	 * exists, or -1 if it doesn't.
 	 */
 	public int search(String pattern, String text) {
-		// TODO fill this in.
-		return -1;
+		return KMPSearch(pattern, text, buildTable(text));
+
 	}
 	public int KMPSearch(String pattern, String text, int[] partialMatchTable){
-
-		int patternPos = 0;// Position of current character in the pattern (i)
-		int currentMatchIndex = 0;// start of the current match in the text (k)
-		int textLength = text.length();
-		int n = currentMatchIndex + patternPos;
-
-		while (n < textLength){
-
-			if(pattern.substring(currentMatchIndex,currentMatchIndex).equals(text.substring(n,n))){ //Matched substrings
-
-				currentMatchIndex++;
-
-				if(patternPos == textLength){ // found the pattern
-
-					return currentMatchIndex;
-				}
-			}
-			else if(partialMatchTable[patternPos] == -1){ //mismatch no self overlap
-
-				patternPos = 0;
-
-				currentMatchIndex = n + 1;
-			}
-			else{ // mismatched,  self overlap
-
-				currentMatchIndex = n - partialMatchTable[patternPos]; // match position jumps forward
-
-				patternPos = partialMatchTable[patternPos];
-			}
+		if(pattern.length() == 0 || text.length() == 0|| partialMatchTable == null){
+			return -1;
 		}
 
+		int j = 0;
+		int k = 0;
+		int textLength = text.length();
+
+		while (j < textLength){
+			if(pattern.charAt(k) == text.charAt(j)){ //Matched substrings
+				j++;
+				k++;
+				if(k == pattern.length()){ // found the pattern
+					return j-k;
+				}
+			}
+			else{ //mismatch no self overlap
+				k = partialMatchTable[k];
+				if(k < 0){
+					j++;
+					k++;
+				}
+			}
+		}
 
 		return -1; // failed to find the pattern in the text
 	}
