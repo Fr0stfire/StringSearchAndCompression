@@ -10,11 +10,15 @@ import java.util.*;
  */
 public class HuffmanCoding {
 
-	private Map<Character, Integer> counts = new HashMap<>();
+	HuffmanNode root;
 
 	/**
 	 * This would be a good place to compute and store the tree.
 	 */
+	public HuffmanCoding(){
+
+	}
+
 	public HuffmanCoding(String text) {
 		//makeUniqueChars(text);
 	}
@@ -51,13 +55,43 @@ public class HuffmanCoding {
 	}
 
 
-	public HuffmanNode makeTree(Map<Character,Integer> characterCounts){
+	public HuffmanNode makeTree(ArrayList<HuffmanNode> characterCounts){
 
-		//combine two least frequently used characters and sum their occurrences
+		//stop the loop when you are left with the highest frequency node, the root node
+		while(characterCounts.size() != 1) {
+
+			//Make sure the list is sorted
+			characterCounts.sort(Comparator.comparingInt(HuffmanNode::getFrequency)); //Could use an anonymous class but this lambda expression is more elegant
+
+			int size = characterCounts.size(); //Keep track of the size in a variable as to reduce how many method calls
+
+			//Combine the two lowest frequency nodes
+			HuffmanNode leftNode = characterCounts.get(0);
+			HuffmanNode rightNode = characterCounts.get(1);
+			int frequency = leftNode.getFrequency() + rightNode.getFrequency();
+			HuffmanNode parent = new HuffmanFrequencyNode(frequency,null, leftNode, rightNode);
+
+			//Remove the nodes from the list and add their parent
+			characterCounts.remove(leftNode);
+			characterCounts.remove(rightNode);
+			characterCounts.add(parent);
+
+			assert (parent.getLeftChild() != null && parent.getRightChild() != null);
+			assert (parent.getLeftChild() == leftNode && parent.getRightChild() == rightNode);
 
 
-		//todo
-		return null;
+//			if (leftNode instanceof HuffmanCharacterNode) {
+//				System.out.print("Symbol: '" + ((HuffmanCharacterNode) leftNode).getCharacter() + "'");
+//				System.out.println(" Frequency: " + leftNode.getFrequency());
+//			}
+//			if (rightNode instanceof HuffmanCharacterNode) {
+//				System.out.print("Symbol: '" + ((HuffmanCharacterNode) rightNode).getCharacter() + "'");
+//				System.out.println(" Frequency: " + rightNode.getFrequency());
+//			}
+		}
+		assert(characterCounts.size() == 1);
+
+		return characterCounts.get(0);
 	}
 
 	/**

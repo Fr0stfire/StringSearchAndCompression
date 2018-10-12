@@ -1,19 +1,26 @@
 package code;
 
-public class HuffmanFrequencyNode extends HuffmanNode{
+import java.util.Objects;
+
+public class HuffmanFrequencyNode extends HuffmanNode {
 
     private int frequency;
 
-    private HuffmanNode leftNode;
-    private HuffmanNode rightNode;
+    private HuffmanNode parent;
+    private HuffmanNode leftChild;
+    private HuffmanNode rightChild;
 
-
-    public HuffmanFrequencyNode(int frequency, HuffmanNode left, HuffmanNode right){
+    public HuffmanFrequencyNode(int frequency, HuffmanNode parent, HuffmanNode leftChild, HuffmanNode rightChild) {
         this.frequency = frequency;
-        this.leftNode = left;
-        this.rightNode = right;
+        this.parent = parent;
+        this.leftChild = leftChild;
+        this.rightChild = rightChild;
+    }
+    public String getInfo(){
+        return Integer.toString(frequency);
     }
 
+    @Override
     public int getFrequency() {
         return frequency;
     }
@@ -22,22 +29,69 @@ public class HuffmanFrequencyNode extends HuffmanNode{
         this.frequency = frequency;
     }
 
-    public HuffmanNode getLeftNode() {
-        return leftNode;
+    @Override
+    public HuffmanNode getParent() {
+        return parent;
     }
 
-    public void setLeftNode(HuffmanNode leftNode) {
-        this.leftNode = leftNode;
+    public void setParent(HuffmanNode parent) {
+        this.parent = parent;
     }
 
-    public HuffmanNode getRightNode() {
-        return rightNode;
+    @Override
+    public HuffmanNode getLeftChild() {
+        return leftChild;
     }
 
-    public void setRightNode(HuffmanNode rightNode) {
-        this.rightNode = rightNode;
+    public void setLeftChild(HuffmanNode leftChild) {
+        this.leftChild = leftChild;
     }
 
+    @Override
+    public HuffmanNode getRightChild() {
+        return rightChild;
+    }
 
+    public void setRightChild(HuffmanNode rightChild) {
+        this.rightChild = rightChild;
+    }
+    public int getDepth(){
+        int leftDepth = 0;
+        int rightDepth = 0;
 
+        if(leftChild != null){
+            leftDepth = this.leftChild.getDepth();
+        }
+        if(rightChild != null){
+            rightDepth = this.rightChild.getDepth();
+        }
+        return 1 + ((leftDepth < rightDepth) ? leftDepth:rightDepth);
+    }
+    public String displayTree(){
+        String line = "";
+        int depth = this.getDepth();
+
+        for (int i = 0; i < depth; i++) {
+            line = line + " ";
+        }
+        line = line + this.getFrequency();
+
+        return line;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof HuffmanFrequencyNode)) return false;
+        HuffmanFrequencyNode that = (HuffmanFrequencyNode) o;
+        return getFrequency() == that.getFrequency() &&
+                Objects.equals(getParent(), that.getParent()) &&
+                Objects.equals(getLeftChild(), that.getLeftChild()) &&
+                Objects.equals(getRightChild(), that.getRightChild());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getFrequency(), getParent(), getLeftChild(), getRightChild());
+    }
 }

@@ -6,13 +6,15 @@ public class HuffmanCharacterNode extends HuffmanNode{
 
     private int frequency;
     private HuffmanNode parent;
-
     char character;
 
     public HuffmanCharacterNode(int frequency, char character,HuffmanNode parent) {
         this.frequency = frequency;
         this.parent = parent;
         this.character = character;
+    }
+    public String getInfo(){
+        return Integer.toString(frequency) + getCharacter();
     }
 
     public HuffmanNode getParent() {
@@ -39,18 +41,34 @@ public class HuffmanCharacterNode extends HuffmanNode{
     }
 
     @Override
+    public int getDepth() {
+        return 1;
+    }
+    public String displayTree(){
+        String line = "";
+        int depth = this.getDepth();
+
+        for (int i = 0; i < depth; i++) {
+            line = line + " ";
+        }
+        line = line + this.getFrequency();
+        line = line + this.getCharacter();
+
+        return line;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof HuffmanCharacterNode)) return false;
         HuffmanCharacterNode that = (HuffmanCharacterNode) o;
-        return frequency == that.frequency &&
-                character == that.character &&
-                Objects.equals(parent, that.parent);
+        return getFrequency() == that.getFrequency() &&
+                getCharacter() == that.getCharacter() &&
+                Objects.equals(getParent(), that.getParent());
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(frequency, parent, character);
+        return Objects.hash(getFrequency(), getParent(), getCharacter());
     }
 }

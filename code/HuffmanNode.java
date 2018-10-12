@@ -6,13 +6,41 @@ import java.util.Comparator;
 public abstract class HuffmanNode {
 
     private int frequency;
-    HuffmanNode parent;
+
+    private HuffmanNode parent;
+    private HuffmanNode leftChild;
+    private HuffmanNode rightChild;
+
+    public String getInfo(){
+        return Integer.toString(frequency);
+    }
+
+    public HuffmanNode getLeftChild() {
+        return leftChild;
+    }
+
+    public HuffmanNode getRightChild() {
+        return rightChild;
+    }
+
+    public int getFrequency() {
+        return frequency;
+    }
+
+    public HuffmanNode getParent() {
+        return parent;
+    }
 
 
 
+    public int getDepth(){
+        return 1;
+    }
+    public String displayTree(){
 
 
-
+    return "";
+    }
 
     /*
     /
