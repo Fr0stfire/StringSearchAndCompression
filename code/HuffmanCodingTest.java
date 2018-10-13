@@ -83,6 +83,7 @@ public class HuffmanCodingTest {
 
 
     }
+
     @Test
     void depth(){
 
@@ -166,16 +167,33 @@ public class HuffmanCodingTest {
         return breadthFirst;
     }
 
+    @Test
+    public void createBinaryTable(){
+        HuffmanCoding huffmanCoding = new HuffmanCoding();
+        String textOne = "abccddeeefff";
+        String textTwo = "Im going to go across the street and get you some orange sherbet";
+
+        ArrayList<HuffmanNode> nodes = huffmanCoding.makeUniqueChars(textOne);
+        HuffmanNode root = huffmanCoding.makeTree(nodes);
+
+        HashMap<Character,String> table = huffmanCoding.createBinaryTable();
+
+        System.out.println("Map value is = " + table.get('a'));
+        assert(table.get('a').equals("0000"));
+
+    }
+
 
     @Test public void drawTree(){
         HuffmanCoding huffmanCoding = new HuffmanCoding();
         String textOne = "abccddeeefff";
         String textTwo = "Im going to go across the street and get you some orange sherbet";
 
-        ArrayList<HuffmanNode> nodes = huffmanCoding.makeUniqueChars(song());
+        ArrayList<HuffmanNode> nodes = huffmanCoding.makeUniqueChars(textOne);
         HuffmanNode root = huffmanCoding.makeTree(nodes);
 
-        print(root);
+        printTree(root);
+
     }
 
     @Test
@@ -206,7 +224,7 @@ public class HuffmanCodingTest {
     @Test
     public void getInformation() {
     }
-    public static void print(HuffmanNode root)
+    public static void printTree(HuffmanNode root)
     {
         List<List<String>> lines = new ArrayList<List<String>>();
 
@@ -312,6 +330,9 @@ public class HuffmanCodingTest {
             perpiece /= 2;
         }
     }
+
+
+
     public String song(){
         return"Hiya Barbie\n" +
                 "Hi Ken!\n" +

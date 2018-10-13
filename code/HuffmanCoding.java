@@ -11,6 +11,9 @@ import java.util.*;
 public class HuffmanCoding {
 
 	HuffmanNode root;
+	ArrayList<HuffmanNode> nodes = new ArrayList<>();
+	Map<HuffmanNode, String>  binaryCodes = new HashMap<>();
+	ArrayList<HuffmanNode> tree = new ArrayList<>();
 
 	/**
 	 * This would be a good place to compute and store the tree.
@@ -20,7 +23,9 @@ public class HuffmanCoding {
 	}
 
 	public HuffmanCoding(String text) {
-		//makeUniqueChars(text);
+		this.nodes = makeUniqueChars(text);
+		makeTree(new ArrayList<>(this.nodes)); // copy the array as to preserve the list
+		this.root = this.tree.get(0);
 	}
 
 	public ArrayList<HuffmanNode> makeUniqueChars(String text){
@@ -90,8 +95,43 @@ public class HuffmanCoding {
 //			}
 		}
 		assert(characterCounts.size() == 1);
-
+		this.tree = characterCounts;
 		return characterCounts.get(0);
+	}
+
+	public HashMap<Character,String> createBinaryTable(){
+		ArrayList<HuffmanNode> chars = this.nodes;
+		ArrayList<HuffmanNode> tree = this.tree;
+		HashMap<Character,String> binaryTable = new HashMap<>();
+		HuffmanNode root = tree.get(0);
+
+		for (int i = 0; i < chars.size(); i++) {
+			HuffmanNode currentNode = chars.get(i);
+
+			char c = ((HuffmanCharacterNode) currentNode).getCharacter();
+			String binaryString = "";
+			//Get the Node from the tree to traverse back up
+			for (int j = 0; j < tree.size(); j++) {
+				HuffmanNode temp = tree.get(j);
+				if(temp.equals(currentNode)){
+				currentNode = temp;
+				}
+			}
+			//Traverseback up the tree
+			while(!currentNode.equals(root)){
+				HuffmanNode parent = currentNode.getParent();
+				if(parent.getRightChild().equals(currentNode)){
+					binaryString += "1";
+				}
+				else{
+					assert (parent.getLeftChild().equals(currentNode));
+					binaryString += "0";
+				}
+
+			}
+			binaryTable.put(c,binaryString);
+		}
+		return binaryTable;
 	}
 
 	/**
@@ -100,8 +140,10 @@ public class HuffmanCoding {
 	 * only 1 and 0.
 	 */
 	public String encode(String text) {
-		// TODO fill this in.
-		return "";
+
+
+
+		return null;
 	}
 
 	/**

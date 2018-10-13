@@ -2,6 +2,7 @@ package code;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Objects;
 
 public abstract class HuffmanNode {
 
@@ -39,8 +40,10 @@ public abstract class HuffmanNode {
     public String displayTree(){
 
 
-    return "";
+        return "";
     }
+
+
 
     /*
     /
@@ -75,5 +78,21 @@ public abstract class HuffmanNode {
                    }
         );
         return nodes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof HuffmanNode)) return false;
+        HuffmanNode that = (HuffmanNode) o;
+        return getFrequency() == that.getFrequency() &&
+                Objects.equals(getParent(), that.getParent()) &&
+                Objects.equals(getLeftChild(), that.getLeftChild()) &&
+                Objects.equals(getRightChild(), that.getRightChild());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getFrequency(), getParent(), getLeftChild(), getRightChild());
     }
 }
