@@ -59,6 +59,7 @@ public class HuffmanCodingTest {
 
         nodes.sort(Comparator.comparingInt(HuffmanNode::getFrequency));
         unique.sort(Comparator.comparingInt(HuffmanNode::getFrequency));
+
         //nodes = HuffmanNode.sort(nodes);
         //unique = HuffmanNode.sort(unique);
 
@@ -176,11 +177,55 @@ public class HuffmanCodingTest {
         ArrayList<HuffmanNode> nodes = huffmanCoding.makeUniqueChars(textOne);
         HuffmanNode root = huffmanCoding.makeTree(nodes);
 
-        HashMap<Character,String> table = huffmanCoding.createBinaryTable();
+        HashMap<Character,String> table = huffmanCoding.createBinaryTable(root);
 
-        System.out.println("Map value is = " + table.get('a'));
-        assert(table.get('a').equals("0000"));
+        System.out.println("Value is = " + table.get('a'));
+        assert(table.get('a').equals("000"));
+        assert(table.get('b').equals("001"));
 
+        for (Map.Entry<Character, String> entry: table.entrySet()) {
+            System.out.println(entry.getKey() + " = " + entry.getValue());
+        }
+        drawTree();
+
+    }
+
+    @Test
+    public void testEncode(){
+        HuffmanCoding huffmanCoding = new HuffmanCoding();
+        String textOne = "abccddeeefff";
+        String textTwo = "Im going to go across the street and get you some orange sherbet";
+
+        ArrayList<HuffmanNode> nodes = huffmanCoding.makeUniqueChars(textOne);
+        HuffmanNode root = huffmanCoding.makeTree(nodes);
+
+        HashMap<Character,String> table = huffmanCoding.createBinaryTable(root);
+
+        String encoded = huffmanCoding.encode(textOne);
+
+
+        System.out.println(encoded + " " + encoded.length());
+        assert("000001110110111111010101101010".equals(encoded));
+    }
+    @Test
+    public void testDecode(){
+        HuffmanCoding huffmanCoding = new HuffmanCoding();
+
+        String text = song();
+
+        ArrayList<HuffmanNode> nodes = huffmanCoding.makeUniqueChars(text);
+        HuffmanNode root = huffmanCoding.makeTree(nodes);
+
+        HashMap<Character,String> table = huffmanCoding.createBinaryTable(root);
+
+        String encoded = huffmanCoding.encode(text);
+        String decoded = huffmanCoding.decode(encoded);
+
+
+        System.out.println(text);
+        System.out.println(decoded);
+
+        assert(text.equals(decoded));
     }
 
 

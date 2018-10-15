@@ -12,7 +12,7 @@ public class HuffmanCoding {
 
 	HuffmanNode root;
 	ArrayList<HuffmanNode> nodes = new ArrayList<>();
-	Map<HuffmanNode, String>  binaryCodes = new HashMap<>();
+	Map<Character, String>  binaryCodes = new HashMap<>();
 	ArrayList<HuffmanNode> tree = new ArrayList<>();
 
 	/**
@@ -26,6 +26,7 @@ public class HuffmanCoding {
 		this.nodes = makeUniqueChars(text);
 		makeTree(new ArrayList<>(this.nodes)); // copy the array as to preserve the list
 		this.root = this.tree.get(0);
+		this.binaryCodes = createBinaryTable(root);
 	}
 
 	public ArrayList<HuffmanNode> makeUniqueChars(String text){
@@ -81,56 +82,51 @@ public class HuffmanCoding {
 			characterCounts.remove(rightNode);
 			characterCounts.add(parent);
 
-			assert (parent.getLeftChild() != null && parent.getRightChild() != null);
-			assert (parent.getLeftChild() == leftNode && parent.getRightChild() == rightNode);
+			leftNode.setParent(parent);
+			rightNode.setParent(parent);
 
+//			assert (parent.getLeftChild() != null && parent.getRightChild() != null);
+//			assert (parent.getLeftChild() == leftNode && parent.getRightChild() == rightNode);
 
-//			if (leftNode instanceof HuffmanCharacterNode) {
-//				System.out.print("Symbol: '" + ((HuffmanCharacterNode) leftNode).getCharacter() + "'");
-//				System.out.println(" Frequency: " + leftNode.getFrequency());
-//			}
-//			if (rightNode instanceof HuffmanCharacterNode) {
-//				System.out.print("Symbol: '" + ((HuffmanCharacterNode) rightNode).getCharacter() + "'");
-//				System.out.println(" Frequency: " + rightNode.getFrequency());
-//			}
 		}
-		assert(characterCounts.size() == 1);
+//		assert(characterCounts.size() == 1);
 		this.tree = characterCounts;
+		this.root = characterCounts.get(0);
 		return characterCounts.get(0);
 	}
 
-	public HashMap<Character,String> createBinaryTable(){
-		ArrayList<HuffmanNode> chars = this.nodes;
-		ArrayList<HuffmanNode> tree = this.tree;
+
+	public HashMap<Character,String> createBinaryTable(HuffmanNode root){
 		HashMap<Character,String> binaryTable = new HashMap<>();
-		HuffmanNode root = tree.get(0);
 
-		for (int i = 0; i < chars.size(); i++) {
-			HuffmanNode currentNode = chars.get(i);
+		LinkedList<HuffmanNode> leaves = root.getLeaves(new LinkedList<HuffmanNode>());
 
-			char c = ((HuffmanCharacterNode) currentNode).getCharacter();
-			String binaryString = "";
-			//Get the Node from the tree to traverse back up
-			for (int j = 0; j < tree.size(); j++) {
-				HuffmanNode temp = tree.get(j);
-				if(temp.equals(currentNode)){
-				currentNode = temp;
-				}
-			}
-			//Traverseback up the tree
-			while(!currentNode.equals(root)){
+		while(!leaves.isEmpty()){
+
+			HuffmanNode currentNode = leaves.poll();
+			String binaryCode = "";
+			HuffmanCharacterNode temp = (HuffmanCharacterNode)(currentNode);
+			Character c = temp.getCharacter();
+
+			while(!root.equals(currentNode)){
+
 				HuffmanNode parent = currentNode.getParent();
-				if(parent.getRightChild().equals(currentNode)){
-					binaryString += "1";
+
+				if(parent.getLeftChild().equals(currentNode)){
+					binaryCode = binaryCode + "0";
+				}
+				else if(parent.getRightChild().equals(currentNode)){
+					binaryCode = binaryCode + "1";
 				}
 				else{
-					assert (parent.getLeftChild().equals(currentNode));
-					binaryString += "0";
+					System.out.println("Something went wrong with this node");
 				}
-
+				currentNode = currentNode.getParent();
 			}
-			binaryTable.put(c,binaryString);
+			binaryCode = new StringBuilder(binaryCode).reverse().toString();
+			binaryTable.put(c,binaryCode );
 		}
+		this.binaryCodes = binaryTable;
 		return binaryTable;
 	}
 
@@ -141,9 +137,14 @@ public class HuffmanCoding {
 	 */
 	public String encode(String text) {
 
+		StringBuilder encoded = new StringBuilder("");
+		for (int i = 0; i < text.length(); i++) {
+			char c = text.charAt(i);
+			encoded .append(this.binaryCodes.get(c));
+		}
 
 
-		return null;
+		return encoded.toString();
 	}
 
 	/**
@@ -151,8 +152,31 @@ public class HuffmanCoding {
 	 * and return the decoded text as a text string.
 	 */
 	public String decode(String encoded) {
-		// TODO fill this in.
-		return "";
+		StringBuilder decoded = new StringBuilder("");
+		HuffmanNode currentNode = this.root;
+
+		System.out.println(this.binaryCodes);
+		for (int i = 0; i <= encoded.length(); i++) {
+			if (currentNode instanceof HuffmanCharacterNode) {
+				decoded.append(((HuffmanCharacterNode) currentNode).getCharacter());
+				currentNode = this.root;
+				if(i == encoded.length()){
+					break;
+				}
+			}
+			char c = encoded.charAt(i);
+			if(c == '0'){
+				currentNode = currentNode.getLeftChild();
+			}
+			else if(c == '1'){
+				currentNode = currentNode.getRightChild();
+			}
+			else{
+				System.out.println("Unexpected character found in the binary table. Character = " + c);
+			}
+
+		}
+		return decoded.toString();
 	}
 
 	/**

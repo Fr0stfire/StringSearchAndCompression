@@ -1,5 +1,7 @@
 package code;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Objects;
 
 public class HuffmanCharacterNode extends HuffmanNode{
@@ -38,6 +40,12 @@ public class HuffmanCharacterNode extends HuffmanNode{
     }
     public void incrementFrequency(){
         this.frequency++;
+    }
+
+    @Override
+    public LinkedList<HuffmanNode> getLeaves(LinkedList<HuffmanNode> leaves) {
+         leaves.add(this);
+         return leaves;
     }
 
     @Override

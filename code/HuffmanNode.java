@@ -2,6 +2,7 @@ package code;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.Objects;
 
 public abstract class HuffmanNode {
@@ -32,7 +33,9 @@ public abstract class HuffmanNode {
         return parent;
     }
 
-
+    public void setParent(HuffmanNode parent) {
+        this.parent = parent;
+    }
 
     public int getDepth(){
         return 1;
@@ -61,6 +64,17 @@ public abstract class HuffmanNode {
             }
         }
         return null;
+    }
+    public LinkedList<HuffmanNode> getLeaves(LinkedList<HuffmanNode> leaves){
+
+       if(leftChild != null){
+           leftChild.getLeaves(leaves);
+       }
+       if(rightChild != null){
+           rightChild.getLeaves(leaves);
+       }
+
+       return leaves;
     }
 
     public static ArrayList<HuffmanNode> sort(ArrayList<HuffmanNode> nodes){
