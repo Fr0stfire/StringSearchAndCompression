@@ -68,15 +68,16 @@ public class HuffmanCharacterNode extends HuffmanNode{
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof HuffmanCharacterNode)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         HuffmanCharacterNode that = (HuffmanCharacterNode) o;
-        return getFrequency() == that.getFrequency() &&
-                getCharacter() == that.getCharacter() &&
-                Objects.equals(getParent(), that.getParent());
+        return frequency == that.frequency &&
+                character == that.character;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getFrequency(), getParent(), getCharacter());
+
+        return Objects.hash(super.hashCode(), frequency, character);
     }
 }

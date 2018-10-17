@@ -10,14 +10,19 @@ import java.util.*;
  */
 public class HuffmanCoding {
 
+	//The root of the tree after makeTree() has been called
 	HuffmanNode root;
+
+	//All of the unique characters that are in a text. Produced from makeUniqueChars()
 	ArrayList<HuffmanNode> nodes = new ArrayList<>();
+
+	//Binary codes of all of the unique chars mapped to each character
 	Map<Character, String>  binaryCodes = new HashMap<>();
+
+	//All of the nodes in a tree. Useful for iterative search algorithms
 	ArrayList<HuffmanNode> tree = new ArrayList<>();
 
-	/**
-	 * This would be a good place to compute and store the tree.
-	 */
+
 	public HuffmanCoding(){
 
 	}
@@ -27,15 +32,22 @@ public class HuffmanCoding {
 		makeTree(new ArrayList<>(this.nodes)); // copy the array as to preserve the list
 		this.root = this.tree.get(0);
 		this.binaryCodes = createBinaryTable(root);
+		printTable();
 	}
 
+
+	/**
+	 * @param text The text in which the algorithm will produce an arraylist of all of the unique characters and their frequency in.
+	 * @return The completed arrayList with all of the unique chars and their frequency
+	 */
 	public ArrayList<HuffmanNode> makeUniqueChars(String text){
 
+		//Text is an empty string
 		if(text.length() == 0){
 			return null;
 		}
-		ArrayList<HuffmanNode> nodes = new ArrayList<>();
 
+		ArrayList<HuffmanNode> nodes = new ArrayList<>();
 
 		nodes.add(new HuffmanCharacterNode(1,text.charAt(0),null)); //very first item in text. adds here so we don't have an if statement in the next loop that redundantly checks each iteration
 
@@ -45,8 +57,8 @@ public class HuffmanCoding {
 		}
 
 		for(int i = 1; i < text.length(); i++){
-			Character c = text.charAt(i);
 
+			Character c = text.charAt(i);
 			HuffmanCharacterNode characterNode = HuffmanNode.treeContainsChar(nodes,c); //Check the tree for a node with the current character
 
 			if(characterNode != null){//Found in the tree
@@ -61,6 +73,14 @@ public class HuffmanCoding {
 	}
 
 
+	/**
+	 * Using an arrayList provided this method finds the two lowest frequency nodes and creates a frequency node as both of their parents.
+	 * The parent frequency node is then added to the list into the position of the sum of its children's frequencies.
+	 * Keeps doing this iteratively until their is only one node left in the list; which is the root.
+	 *
+	 * @param characterCounts An arrayList of HuffmanNodes that contains all of the unique chars and their frequency
+	 * @return	The root of the tree created by this method
+	 */
 	public HuffmanNode makeTree(ArrayList<HuffmanNode> characterCounts){
 
 		//stop the loop when you are left with the highest frequency node, the root node
@@ -85,17 +105,25 @@ public class HuffmanCoding {
 			leftNode.setParent(parent);
 			rightNode.setParent(parent);
 
-//			assert (parent.getLeftChild() != null && parent.getRightChild() != null);
-//			assert (parent.getLeftChild() == leftNode && parent.getRightChild() == rightNode);
-
 		}
-//		assert(characterCounts.size() == 1);
 		this.tree = characterCounts;
 		this.root = characterCounts.get(0);
 		return characterCounts.get(0);
 	}
 
+	public void printTable(){
+		for (Map.Entry<Character, String> entry : this.binaryCodes.entrySet()) {
+			System.out.println(entry.getKey() + " : " + entry.getValue());
+		}
+	}
 
+
+	/**
+	 * This method gets all leaves of a tree and adds them to a linked list. It iteratively goes from the bottom of the tree back to the root checking if it is the left or right child of its parent node.
+	 * 0 for left child, 1 for right child. after it gets to the root the String is reversed to be the correct direction as we were traversing back up the tree not down it.
+	 * @param root The root of a HuffmanNode tree
+	 * @return A hashmap containing all of the binary codes mapped to the characters
+	 */
 	public HashMap<Character,String> createBinaryTable(HuffmanNode root){
 		HashMap<Character,String> binaryTable = new HashMap<>();
 

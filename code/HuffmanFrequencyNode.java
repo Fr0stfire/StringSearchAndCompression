@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class HuffmanFrequencyNode extends HuffmanNode {
 
-    private int frequency;
+    private Integer frequency;
 
     private HuffmanNode parent;
     private HuffmanNode leftChild;
@@ -98,16 +98,15 @@ public class HuffmanFrequencyNode extends HuffmanNode {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof HuffmanFrequencyNode)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         HuffmanFrequencyNode that = (HuffmanFrequencyNode) o;
-        return getFrequency() == that.getFrequency() &&
-                Objects.equals(getParent(), that.getParent()) &&
-                Objects.equals(getLeftChild(), that.getLeftChild()) &&
-                Objects.equals(getRightChild(), that.getRightChild());
+        return frequency.equals(that.frequency);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getFrequency(), getParent(), getLeftChild(), getRightChild());
+
+        return Objects.hash(super.hashCode(), frequency);
     }
 }

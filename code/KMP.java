@@ -22,7 +22,24 @@ public class KMP {
 	 * exists, or -1 if it doesn't.
 	 */
 	public int search(String pattern, String text) {
-		return KMPSearch(pattern, text, buildTable(text));
+
+		Long tableTime = System.currentTimeMillis();
+		int[] table = buildTable(text);
+		tableTime = (System.currentTimeMillis() - tableTime);
+		System.out.println("\nTime taken to perform buildTable: " + tableTime);
+
+		Long kmpTime = System.currentTimeMillis();
+		int kmp = KMPSearch(pattern, text, table);
+		kmpTime = (System.currentTimeMillis() - kmpTime);
+		System.out.println("Time taken to perform KMP: " + kmpTime);
+
+		Long bruteTime = System.currentTimeMillis();
+		int bruteForce = bruteForce(pattern,text);
+		bruteTime = System.currentTimeMillis() - bruteTime;
+		System.out.println("Time taken to perform Bruteforce: " + bruteTime);
+
+		assert(bruteForce == kmp);
+		return kmp;
 
 	}
 	public int KMPSearch(String pattern, String text, int[] partialMatchTable){
@@ -82,7 +99,7 @@ public class KMP {
 	/*
 	/ @parameter
 	*/
-	public int bruteforce(String pattern, String text){
+	public int bruteForce(String pattern, String text){
 
 		int patternLength = pattern.length();
 		int textLength = text.length();
@@ -92,7 +109,8 @@ public class KMP {
 			found = true;
 
 			for(int j = 0; j < patternLength - 1; j++){
-				if(!pattern.substring(j,j).equals(text.substring(i+j))){
+
+				if(pattern.charAt(j) != text.charAt(i+j)){
 					found = false;
 					break;
 				}
